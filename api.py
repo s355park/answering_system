@@ -16,19 +16,20 @@ class CustomRetriever(BaseRetriever):
         documents = [Document(page_content=str(text), metadata={}) for text in retrieved_strings]
         return documents
 
-retriever = CustomRetriever()
+def get_ans(query):
+    retriever = CustomRetriever()
 
-load_dotenv()
+    load_dotenv()
 
-# Initialize the OpenAI language model
-llm = ChatOpenAI(model_name='gpt-4o', openai_api_key=os.getenv('OPEN_AI_API_KEY2'))  # Ensure your .env file has the correct API key
- 
+    # Initialize the OpenAI language model
+    llm = ChatOpenAI(model_name='gpt-4o', openai_api_key=os.getenv('OPEN_AI_API_KEY2'))  # Ensure your .env file has the correct API key
+    
 
-# Create a RetrievalQA chain with the retriever and language model
-qa_chain = RetrievalQA.from_chain_type(
-    llm=llm,
-    retriever=retriever  # Pass the retriever that retrieves the actual text
-)
+    # Create a RetrievalQA chain with the retriever and language model
+    qa_chain = RetrievalQA.from_chain_type(
+        llm=llm,
+        retriever=retriever  # Pass the retriever that retrieves the actual text
+    )
 
-res = qa_chain("what is axiom of probability?")
-print(res)
+    res = qa_chain(query)
+    return res['result']
